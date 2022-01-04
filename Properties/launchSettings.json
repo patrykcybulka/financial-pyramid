@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "financial-pyramid": {
+      "commandName": "Project",
+      "commandLineArgs": "./InputData/piramida.xml ./InputData/przelewy.xml"
+    }
+  }
+}
