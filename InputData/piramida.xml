@@ -3,19 +3,7 @@
   <uczestnik id="1">
     <uczestnik id="2"/>
     <uczestnik id="3">
-      <uczestnik id="4">
-        <uczestnik id="5">
-          <uczestnik id="6">
-            <uczestnik id="9"/>
-          </uczestnik>
-          <uczestnik id="7">
-            <uczestnik id="10"/>
-          </uczestnik>
-          <uczestnik id="8">
-            <uczestnik id="11"/>
-          </uczestnik>
-        </uczestnik>
-      </uczestnik>
+      <uczestnik id="4"/>
     </uczestnik>
   </uczestnik>
 </piramida>
