@@ -14,7 +14,7 @@ namespace financial_pyramid.Module
         {
             companyMembers = convertToCompanyMemberList(pyramid.Participant);
 
-            validaOfCompanyMembers();
+            verifyCompanyMembers();
         }
 
         public void WriteAllMembersOfCompany()
@@ -47,12 +47,6 @@ namespace financial_pyramid.Module
             if (companyMember == null)
             {
                 throw new FinancialPyramidException(EErrorCode.CompanyMemberNotExit);
-            }
-
-            if (companyMember.PyramidLevel == 0)
-            {
-                companyMember.Amount += Convert.ToInt32(Math.Floor(amount));
-                return;
             }
 
             var superiors = companyMembers.Where(c => companyMember.IdentifiersOfSuperiors.Contains(c.Id)).OrderBy(c => c.PyramidLevel);
@@ -96,14 +90,20 @@ namespace financial_pyramid.Module
 
             foreach (var subordinate in participant.Subordinates)
             {
+                superiorIds.Add(participant.Id);
+
+                companyMembersList.AddRange(convertToCompanyMemberList(subordinate, pyramidLevel + 1, superiorIds));
+
                 if (!subordinate.Subordinates.Any())
                 {
                     numberOfSubordinatesWithoutSubordinates++;
                 }
+                else
+                {
+                    var companyMember = companyMembersList.FirstOrDefault(c => c.Id == subordinate.Id);
 
-                superiorIds.Add(participant.Id);
-
-                companyMembersList.AddRange(convertToCompanyMemberList(subordinate, pyramidLevel + 1, superiorIds));
+                    numberOfSubordinatesWithoutSubordinates += companyMember.NumberOfSubordinatesWithoutSubordinates;
+                }
             }
 
             companyMembersList.Add(new CompanyMember
@@ -111,13 +111,13 @@ namespace financial_pyramid.Module
                 Id                                      = participant.Id,
                 PyramidLevel                            = pyramidLevel,
                 IdentifiersOfSuperiors                  = identifiersOfSuperiors == null ? new HashSet<int>() : identifiersOfSuperiors,
-                NumberOfSubordinatesWithoutSubordinates = companyMembersList.Sum(c => c.NumberOfSubordinatesWithoutSubordinates) + numberOfSubordinatesWithoutSubordinates
+                NumberOfSubordinatesWithoutSubordinates = numberOfSubordinatesWithoutSubordinates
             });
 
             return companyMembersList.OrderBy(c => c.Id).ToList();
         }
 
-        private void validaOfCompanyMembers()
+        private void verifyCompanyMembers()
         {
             if (companyMembers.Exists(c => c.Id > permittedRange || c.Id < 0))
             {
