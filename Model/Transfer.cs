@@ -9,6 +9,6 @@ namespace financial_pyramid.Model
         public int From { get; set; }
 
         [XmlAttribute(AttributeName = "kwota")]
-        public double Amount { get; set; }
+        public int Amount { get; set; }
     }
 }

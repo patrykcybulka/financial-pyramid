@@ -40,7 +40,7 @@ namespace financial_pyramid.Module
                 throw new FinancialPyramidException(EErrorCode.InvalidAmount);
             }
 
-            var amount = transfer.Amount;
+            var amount = Convert.ToDouble(transfer.Amount);
 
             var companyMember = companyMembers.FirstOrDefault(c => c.Id == transfer.From);
 
@@ -51,15 +51,15 @@ namespace financial_pyramid.Module
 
             var superiors = companyMembers.Where(c => companyMember.IdentifiersOfSuperiors.Contains(c.Id)).OrderBy(c => c.PyramidLevel);
 
-            var numberOfOupervisors = superiors.Count();
+            var numberOfSupervisors = superiors.Count();
 
             foreach (var supervisor in superiors)
             {
-                if (numberOfOupervisors != 1)
+                if (numberOfSupervisors != 1)
                 {
                     var amountAfterRound = Convert.ToInt32(Math.Floor(amount / 2));
 
-                    supervisor.Amount += Convert.ToInt32(amountAfterRound);
+                    supervisor.Amount += amountAfterRound;
                     amount -= amountAfterRound;
                 }
                 else
@@ -68,7 +68,7 @@ namespace financial_pyramid.Module
                     amount -= amount;
                 }
 
-                numberOfOupervisors--;
+                numberOfSupervisors--;
             }
         }
 
